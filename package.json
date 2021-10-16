@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "Pedro Wanderley <wanderley.pedro@outlook.com>",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.0",
