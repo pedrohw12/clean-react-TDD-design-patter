@@ -1,10 +1,13 @@
 import { HttpResponse } from "./http-response";
 
-export type HttpPostParams = {
+// O generics <T> obriga que a classe
+// que implemente esta interface, informe o tipo de retorno
+
+export type HttpPostParams<T> = {
   url: string;
-  body?: object;
+  body?: T;
 };
 
-export interface HttpPostClient {
-  post(params: HttpPostParams): Promise<HttpResponse>;
+export interface HttpPostClient<T, R> {
+  post(params: HttpPostParams<T>): Promise<HttpResponse<R>>;
 }
