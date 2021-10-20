@@ -1,4 +1,4 @@
-import { HttpResponse } from "./http-response";
+import { HttpResponse } from ".";
 
 // O generics <T> obriga que a classe
 // que implemente esta interface, informe o tipo de retorno
