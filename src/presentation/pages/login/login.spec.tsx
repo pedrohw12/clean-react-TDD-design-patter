@@ -65,16 +65,6 @@ const simulateValidSubmit = async (
   await waitFor(() => form)
 }
 
-const populatePasswordField = (
-  sut: RenderResult,
-  password = faker.internet.password()
-): void => {
-  const passwordInput = sut.getByTestId('password')
-  fireEvent.input(passwordInput, {
-    target: { value: password }
-  })
-}
-
 const testElementText = (
   sut: RenderResult,
   fieldName: string,
@@ -168,9 +158,7 @@ describe('Login Component', () => {
     const { sut, authenticationSpy } = makeSut()
     const error = new InvalidCredentialsError()
 
-    jest
-      .spyOn(authenticationSpy, 'auth')
-      .mockReturnValueOnce(Promise.reject(error))
+    jest.spyOn(authenticationSpy, 'auth').mockRejectedValueOnce(error)
     await simulateValidSubmit(sut)
 
     testElementText(sut, 'main-error', error.message)
