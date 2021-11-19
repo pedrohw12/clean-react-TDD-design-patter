@@ -18,7 +18,11 @@ type Props = {
   saveAccessToken: SaveAccessToken
 };
 
-const SignUp: React.FC<Props> = ({ validation, addAccount, saveAccessToken }: Props) => {
+const SignUp: React.FC<Props> = ({
+  validation,
+  addAccount,
+  saveAccessToken
+}: Props) => {
   const history = useHistory()
   const [state, setState] = useState({
     isLoading: false,
@@ -105,7 +109,14 @@ const SignUp: React.FC<Props> = ({ validation, addAccount, saveAccessToken }: Pr
           >
             Entrar
           </button>
-          <span className={Styles.link}>Voltar para Login</span>
+          <Link
+            data-testid="login-link"
+            replace
+            to="/login"
+            className={Styles.link}
+          >
+            Voltar para Login
+          </Link>
           <FormStatus />
         </form>
       </Context.Provider>
