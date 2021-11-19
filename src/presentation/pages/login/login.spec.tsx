@@ -174,7 +174,7 @@ describe('Login Component', () => {
 
     jest
       .spyOn(saveAccessTokenMock, 'save')
-      .mockReturnValueOnce(Promise.reject(error))
+      .mockRejectedValueOnce(error)
     await simulateValidSubmit(sut)
 
     Helper.testElementText(sut, 'main-error', error.message)
