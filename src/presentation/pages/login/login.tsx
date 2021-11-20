@@ -6,7 +6,8 @@ import {
   LoginHeader,
   Footer,
   Input,
-  FormStatus
+  FormStatus,
+  SubmitButton
 } from '@/presentation/components'
 import Context from '@/presentation/contexts/form/form-context'
 import { Validation } from '@/presentation/protocols/validation'
@@ -18,10 +19,15 @@ type Props = {
   saveAccessToken: SaveAccessToken
 };
 
-const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }: Props) => {
+const Login: React.FC<Props> = ({
+  validation,
+  authentication,
+  saveAccessToken
+}: Props) => {
   const history = useHistory()
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     email: '',
     password: '',
     emailError: '',
@@ -30,10 +36,14 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
   })
 
   useEffect(() => {
+    const emailError = validation.validate('email', state.email)
+    const passwordError = validation.validate('email', state.password)
+
     setState({
       ...state,
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password)
+      emailError,
+      passwordError,
+      isFormInvalid: !!emailError || !!passwordError
     })
   }, [state.email, state.password])
 
@@ -43,8 +53,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
     event.preventDefault()
 
     try {
-      if (state.isLoading) return
-      if (state.passwordError || state.emailError || state.mainError) return
+      if (state.isLoading || state.isFormInvalid) return
       setState({ ...state, isLoading: true })
 
       const account = await authentication.auth({
@@ -75,14 +84,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
             name="password"
             placeholder="Digite sua senha"
           />
-          <button
-            data-testid="submit"
-            disabled={!!state.emailError || !!state.passwordError}
-            className={Styles.submit}
-            type="submit"
-          >
-            Entrar
-          </button>
+          <SubmitButton text="Entrar" />
           <Link data-testid="signup-link" to="/signup" className={Styles.link}>
             Criar conta
           </Link>

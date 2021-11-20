@@ -6,7 +6,8 @@ import {
   LoginHeader,
   Footer,
   Input,
-  FormStatus
+  FormStatus,
+  SubmitButton
 } from '@/presentation/components'
 import Context from '@/presentation/contexts/form/form-context'
 import { Validation } from '@/presentation/protocols/validation'
@@ -26,6 +27,7 @@ const SignUp: React.FC<Props> = ({
   const history = useHistory()
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     name: '',
     email: '',
     password: '',
@@ -38,17 +40,27 @@ const SignUp: React.FC<Props> = ({
   })
 
   useEffect(() => {
+    const nameError = validation.validate('name', state.name)
+    const emailError = validation.validate('email', state.email)
+    const passwordError = validation.validate('email', state.password)
+    const passwordConfirmationError = validation.validate(
+      'email',
+      state.passwordConfirmation
+    )
+
     setState({
       ...state,
-      nameError: validation.validate('name', state.name),
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('email', state.password),
-      passwordConfirmationError: validation.validate(
-        'email',
-        state.passwordConfirmation
-      )
+      nameError,
+      emailError,
+      passwordError,
+      passwordConfirmationError,
+      isFormInvalid:
+        !!nameError ||
+        !!emailError ||
+        !!passwordError ||
+        !!passwordConfirmationError
     })
-  }, [state.name, state.email])
+  }, [name, state.email])
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
@@ -56,8 +68,7 @@ const SignUp: React.FC<Props> = ({
     event.preventDefault()
 
     try {
-      if (state.isLoading) return
-      if (state.passwordError || state.emailError || state.mainError) return
+      if (state.isLoading || state.isFormInvalid) return
 
       setState({ ...state, isLoading: true })
       const account = await addAccount.add({
@@ -96,19 +107,7 @@ const SignUp: React.FC<Props> = ({
             name="passwordConfirmation"
             placeholder="Repita sua senha"
           />
-          <button
-            data-testid="submit"
-            disabled={
-              !!state.nameError ||
-              !!state.emailError ||
-              !!state.passwordError ||
-              !!state.passwordConfirmationError
-            }
-            className={Styles.submit}
-            type="submit"
-          >
-            Entrar
-          </button>
+          <SubmitButton text="Cadastrar" />
           <Link
             data-testid="login-link"
             replace
