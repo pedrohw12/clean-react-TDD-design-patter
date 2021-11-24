@@ -85,4 +85,12 @@ describe('SignUp', () => {
       assert.isOk(window.localStorage.getItem('accessToken'))
     )
   })
+
+  it('Should save accessToken if valid credentials are provided', () => {
+    Http.mockOk()
+    simulateValidSubmit()
+    cy.getByTestId('error-wrap').should('not.have.descendants')
+    FormHelper.testUrl('/')
+    FormHelper.testLocalStorageItem('accessToken')
+  })
 })
