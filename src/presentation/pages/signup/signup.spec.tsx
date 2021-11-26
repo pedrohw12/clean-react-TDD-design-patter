@@ -10,12 +10,7 @@ import {
   waitFor
 } from '@testing-library/react'
 import { ApiContext } from '@/presentation/contexts'
-import {
-  Helper,
-  ValidationStub,
-  AddAccountSpy,
-  UpdateCurrentAccountMock
-} from '@/presentation/test'
+import { Helper, ValidationStub, AddAccountSpy } from '@/presentation/test'
 import SignUp from './signup'
 import { EmailInUseError } from '@/domain/errors'
 import { AccountModel } from '@/domain/models'

@@ -12,12 +12,7 @@ import {
 
 import { ApiContext } from '@/presentation/contexts'
 import { Login } from '@/presentation/pages'
-import {
-  ValidationStub,
-  AuthenticationSpy,
-  UpdateCurrentAccountMock,
-  Helper
-} from '@/presentation/test'
+import { ValidationStub, AuthenticationSpy, Helper } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 import { AccountModel } from '@/domain/models'
 
