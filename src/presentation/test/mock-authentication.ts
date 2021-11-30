@@ -1,15 +1,22 @@
-import { Authentication, AuthenticationParams } from '@/domain/usecases'
-import { AccountModel } from '@/domain/models'
-import { mockAccountModel } from '@/domain/test'
+import faker from 'faker';
+import { Authentication } from '@/domain/usecases';
+import { mockAccountModel } from '@/domain/test';
 
+export const mockAuthenticationParams = (): Authentication.Params => ({
+  email: faker.internet.email(),
+  password: faker.internet.password()
+});
+
+export const mockAuthenticationModel = (): Authentication.Model =>
+  mockAccountModel();
 export class AuthenticationSpy implements Authentication {
-  account = mockAccountModel();
-  params: AuthenticationParams;
+  account = mockAuthenticationModel();
+  params: Authentication.Params;
   callsCount = 0;
 
-  async auth (params: AuthenticationParams): Promise<AccountModel> {
-    this.params = params
-    this.callsCount++
-    return Promise.resolve(this.account)
+  async auth (params: Authentication.Params): Promise<Authentication.Model> {
+    this.params = params;
+    this.callsCount++;
+    return this.account;
   }
 }
