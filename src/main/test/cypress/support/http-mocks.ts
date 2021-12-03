@@ -1,7 +1,7 @@
-import faker from 'faker'
+import faker from 'faker';
 
-export const mockInvalidCredentialsError = (url: RegExp): void => {
-  cy.server()
+export const mockUnauthorizedError = (url: RegExp): void => {
+  cy.server();
   cy.route({
     method: 'POST',
     url,
@@ -9,23 +9,23 @@ export const mockInvalidCredentialsError = (url: RegExp): void => {
     response: {
       error: faker.random.words()
     }
-  }).as('request')
-}
+  }).as('request');
+};
 
-export const mockEmailInUseError = (url: RegExp): void => {
-  cy.server()
+export const mockForbiddenError = (url: RegExp, method: string): void => {
+  cy.server();
   cy.route({
-    method: 'POST',
+    method,
     url,
     status: 403,
     response: {
       error: faker.random.words()
     }
-  }).as('request')
-}
+  }).as('request');
+};
 
-export const mockUnexpectedError = (url: RegExp, method: string): void => {
-  cy.server()
+export const mockServerError = (url: RegExp, method: string): void => {
+  cy.server();
   cy.route({
     method,
     url,
@@ -33,15 +33,15 @@ export const mockUnexpectedError = (url: RegExp, method: string): void => {
     response: {
       error: faker.random.words()
     }
-  }).as('request')
-}
+  }).as('request');
+};
 
 export const mockOk = (url: RegExp, method: string, response: any): void => {
-  cy.server()
+  cy.server();
   cy.route({
     method,
     url,
     status: 200,
     response
-  }).as('request')
-}
+  }).as('request');
+};
