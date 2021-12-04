@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node index",
+    "dev:base": "webpack-dev-server --config webpack.dev.js",
     "dev": "webpack-dev-server --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "test": "cross-env NODE_ICU_DATA=node_modules/full-icu jest --passWithNoTests --no-cache --runInBand",
@@ -13,6 +14,9 @@
     "test:staged": "yarn test -- --findRelatedTests",
     "test:ci": "yarn test -- --coverage",
     "test:coveralls": "yarn test:ci && coveralls < coverage/lcov.info",
+    "test:cypress": "cypress open",
+    "test:cypress:run": "cypress run",
+    "test:cypress:ci": "start-server-and-test dev:base http-get://localhost:8080 test:cypress:run",
     "check": "npm-check -u -s"
   },
   "devDependencies": {
@@ -50,6 +54,7 @@
     "mini-css-extract-plugin": "^2.4.5",
     "node-sass": "^6.0.1",
     "sass-loader": "^12.2.0",
+    "start-server-and-test": "^1.14.0",
     "style-loader": "^3.3.0",
     "ts-jest": "^27.0.7",
     "ts-loader": "^9.2.6",
