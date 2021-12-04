@@ -1,26 +1,26 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
-import Styles from './signup-styles.scss'
+import Styles from './signup-styles.scss';
 import {
   LoginHeader,
   Footer,
   Input,
   FormStatus,
   SubmitButton
-} from '@/presentation/components'
-import { Validation } from '@/presentation/protocols/validation'
-import { AddAccount } from '@/domain/usecases'
-import { ApiContext, FormContext } from '@/presentation/contexts'
+} from '@/presentation/components';
+import { Validation } from '@/presentation/protocols/validation';
+import { AddAccount } from '@/domain/usecases';
+import { ApiContext, FormContext } from '@/presentation/contexts';
 
 type Props = {
-  validation: Validation
-  addAccount: AddAccount
+  validation: Validation;
+  addAccount: AddAccount;
 };
 
 const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
-  const { setCurrentAccount } = useContext(ApiContext)
-  const history = useHistory()
+  const { setCurrentAccount } = useContext(ApiContext);
+  const history = useHistory();
   const [state, setState] = useState({
     isLoading: false,
     isFormInvalid: true,
@@ -33,52 +33,55 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
     passwordError: '',
     passwordConfirmationError: '',
     mainError: ''
-  })
+  });
 
-  useEffect(() => {
-    const { name, email, password, passwordConfirmation } = state
-    const formData = { name, email, password, passwordConfirmation }
-    const nameError = validation.validate('name', formData)
-    const emailError = validation.validate('email', formData)
-    const passwordError = validation.validate('email', formData)
-    const passwordConfirmationError = validation.validate('email', formData)
+  useEffect(() => validate('name'), [state.name]);
+  useEffect(() => validate('email'), [state.email]);
+  useEffect(() => validate('password'), [state.password]);
+  useEffect(
+    () => validate('passwordConfirmation'),
+    [state.passwordConfirmation]
+  );
 
-    setState({
-      ...state,
-      nameError,
-      emailError,
-      passwordError,
-      passwordConfirmationError,
+  const validate = (field: string): void => {
+    const { name, email, password, passwordConfirmation } = state;
+    const formData = { name, email, password, passwordConfirmation };
+    setState((old) => ({
+      ...old,
+      [`${field}Error`]: validation.validate(field, formData)
+    }));
+    setState((old) => ({
+      ...old,
       isFormInvalid:
-        !!nameError ||
-        !!emailError ||
-        !!passwordError ||
-        !!passwordConfirmationError
-    })
-  }, [name, state.email])
+        !!old.nameError ||
+        !!old.emailError ||
+        !!old.passwordError ||
+        !!old.passwordConfirmationError
+    }));
+  };
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
-    event.preventDefault()
+    event.preventDefault();
 
     try {
-      if (state.isLoading || state.isFormInvalid) return
+      if (state.isLoading || state.isFormInvalid) return;
 
-      setState({ ...state, isLoading: true })
+      setState({ ...state, isLoading: true });
       const account = await addAccount.add({
         name: state.name,
         email: state.email,
         password: state.password,
         passwordConfirmation: state.passwordConfirmation
-      })
+      });
 
-      setCurrentAccount(account)
-      history.replace('/')
+      setCurrentAccount(account);
+      history.replace('/');
     } catch (error) {
-      setState({ ...state, isLoading: false, mainError: error.message })
+      setState({ ...state, isLoading: false, mainError: error.message });
     }
-  }
+  };
 
   return (
     <div className={Styles.signupWrap}>
@@ -116,7 +119,7 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
       </FormContext.Provider>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default SignUp
+export default SignUp;
