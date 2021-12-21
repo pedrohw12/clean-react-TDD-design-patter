@@ -1,39 +1,29 @@
-import React from 'react';
-import { RecoilRoot } from 'recoil';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { ApiContext } from '@/presentation/contexts';
-import {
-  getCurrentAccountAdapter,
-  setCurrentAccountAdapter
-} from '../adapters/current-account-adapter';
-import { PrivateRoute } from '@/presentation/components';
-import {
-  makeLogin,
-  makeSignUp,
-  makeSurveyList,
-  makeSurveyResult
-} from '../factories/pages';
+import { makeLogin, makeSignUp, makeSurveyList, makeSurveyResult } from '@/main/factories/pages'
+import { setCurrentAccountAdapter, getCurrentAccountAdapter } from '@/main/adapters'
+import { PrivateRoute } from '@/main/proxies'
+import { currentAccountState } from '@/presentation/components'
+
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { RecoilRoot } from 'recoil'
+import React from 'react'
 
 const Router: React.FC = () => {
+  const state = {
+    setCurrentAccount: setCurrentAccountAdapter,
+    getCurrentAccount: getCurrentAccountAdapter
+  }
   return (
-    <RecoilRoot>
-      <ApiContext.Provider
-        value={{
-          setCurrentAccount: setCurrentAccountAdapter,
-          getCurrentAccount: getCurrentAccountAdapter
-        }}
-      >
-        <BrowserRouter>
-          <Switch>
-            <Route path="/login" exact component={makeLogin} />
-            <Route path="/signup" exact component={makeSignUp} />
-            <PrivateRoute path="/" exact component={makeSurveyList} />
-            <PrivateRoute path="/surveys/:id" component={makeSurveyResult} />
-          </Switch>
-        </BrowserRouter>
-      </ApiContext.Provider>
+    <RecoilRoot initializeState={({ set }) => set(currentAccountState, state)}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/login" exact component={makeLogin} />
+          <Route path="/signup" exact component={makeSignUp} />
+          <PrivateRoute path="/" exact component={makeSurveyList} />
+          <PrivateRoute path="/surveys/:id" component={makeSurveyResult} />
+        </Switch>
+      </BrowserRouter>
     </RecoilRoot>
-  );
-};
+  )
+}
 
-export default Router;
+export default Router
